@@ -31,6 +31,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "fixedbitset"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "398ea4fabe40b9b0d885340a2a991a44c8a645624075ad966d21f88688e2b69e"
+
+[[package]]
 name = "js-sys"
 version = "0.3.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -202,6 +208,8 @@ name = "wasm-game-of-life"
 version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",
+ "fixedbitset",
+ "js-sys",
  "wasm-bindgen",
  "wasm-bindgen-test",
  "wee_alloc",
