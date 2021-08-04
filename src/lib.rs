@@ -1,3 +1,4 @@
+#[macro_use]
 mod utils;
 
 use wasm_bindgen::prelude::*;
@@ -9,6 +10,7 @@ use std::fmt;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
+// use Math.random from JavaScript
 extern crate js_sys;
 
 extern crate fixedbitset;
@@ -32,6 +34,8 @@ pub struct Universe {
 #[wasm_bindgen]
 impl Universe {
     pub fn new() -> Universe {
+        utils::set_panic_hook();
+
         let width = 64;
         let height = 64;
 
@@ -39,8 +43,12 @@ impl Universe {
         let mut cells = FixedBitSet::with_capacity(size);
 
         for i in 0..size {
-            cells.set(i, js_sys::Math::random() < 0.5);
+            let val = js_sys::Math::random() < 0.5;
+            log!("setting cell[{}, {}]", i, val);
+            cells.set(i, val);
         }
+
+        // log!("Init cells {:?}", cells);
 
         Universe {
             width,
@@ -56,6 +64,14 @@ impl Universe {
                 let idx = self.get_index(row, col);
                 let cell = self.cells[idx];
                 let live_neighbors = self.live_neighbor_count(row, col);
+
+                // log!(
+                //         "cell[{}, {}] is initially {:?} and has {} live neighbors",
+                //         row,
+                //         col,
+                //         cell,
+                //         live_neighbors
+                //     );
 
                 let next_cell = match (cell, live_neighbors) {
                     // Rule 1: Any live cell with fewer than two live neighbours
@@ -74,6 +90,7 @@ impl Universe {
                     (otherwise, _) => otherwise,
                 };
 
+                // log!("    it becomes {:?}", next_cell);
                 next.set(idx, next_cell);
             }
         }
