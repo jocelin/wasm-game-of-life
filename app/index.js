@@ -11,9 +11,7 @@ const universe = Universe.new();
 const width = universe.width();
 const height = universe.height();
 
-const getIndex = (row, column) => {
-  return row * width + column;
-};
+const getIndex = (row, column) => row * width + column;
 
 
 // Give the canvas room for all of our cells and a 1px border
@@ -73,14 +71,31 @@ const drawCells = () => {
   ctx.stroke();
 };
 
+let animationId = null;
+const isPaused = () => animationId === null;
 const renderLoop = () => {
-  universe.tick();
-
   drawGrid();
   drawCells();
-  requestAnimationFrame(renderLoop);
+  universe.tick();
+  animationId = requestAnimationFrame(renderLoop);
 }
 
-drawGrid();
-drawCells();
-requestAnimationFrame(renderLoop);
+const playPauseButton = document.getElementById("play-pause");
+const play = () => {
+  playPauseButton.textContent = "⏸";
+  renderLoop();
+};
+const pause = () => {
+  playPauseButton.textContent = "▶";
+  cancelAnimationFrame(animationId);
+  animationId = null;
+};
+playPauseButton.addEventListener("click", event => {
+  if (isPaused()) {
+    play();
+  } else {
+    pause();
+  }
+});
+
+play();
