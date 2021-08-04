@@ -1,6 +1,8 @@
 import { Universe, Cell } from "wasm-game-of-life";
 import { memory } from "wasm-game-of-life/wasm_game_of_life_bg"; // Import the WebAssembly memory at the top of the file.
 
+import { fps } from './fps';
+
 const CELL_SIZE = 5; // px
 const GRID_COLOR = "#CCCCCC";
 const DEAD_COLOR = "#FFFFFF";
@@ -91,9 +93,11 @@ canvas.addEventListener('click', event => {
 let animationId = null;
 const isPaused = () => animationId === null;
 const renderLoop = () => {
+  fps.render();
+  
+  universe.tick();
   drawGrid();
   drawCells();
-  universe.tick();
   animationId = requestAnimationFrame(renderLoop);
 }
 
