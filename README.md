@@ -1,63 +1,42 @@
-<div align="center">
+# Wasm Game of Life
 
-  <h1><code>wasm-pack-template</code></h1>
+This project explores rust and webassembly following [Rust and WebAssembly Tutorial](https://rustwasm.github.io/docs/book/introduction.html)
 
-  <strong>A template for kick starting a Rust and WebAssembly project using <a href="https://github.com/rustwasm/wasm-pack">wasm-pack</a>.</strong>
+## Prerequisites:
+Tools:
+- Rust
+  - core: 
+    - rustup, rustrc, cargo
+  - ecosystem:
+    - wasm-pack: convert rust to WebAssembly to JavaScript
+    - cargo-generate (optional)
+    - npm init template `create-wasm-app`
+- npm & nodejs
 
-  <p>
-    <a href="https://travis-ci.org/rustwasm/wasm-pack-template"><img src="https://img.shields.io/travis/rustwasm/wasm-pack-template.svg?style=flat-square" alt="Build Status" /></a>
-  </p>
+## Development
+- Workflow: 
+  - Rust > WebAssembly > JavaScript
+    1. build rust project into WebAssembly and JavaScript: `wasm-pack build`
+    2. run the app from within app with normal npm commands
+- Key Concepts in development (notes from tutorial):
+  - interfacing Rust and JavaScript
+    1. Minimizing copying into and out of the WebAssembly linear memory. 
+      Unnecessary copies impose unnecessary overhead.
+    2. Minimizing serializing and deserializing. 
+      Similar to copies, serializing and deserializing also imposes overhead, and often imposes copying as well. If we can pass opaque handles to a data structure — instead of serializing it on one side, copying it into some known location in the WebAssembly linear memory, and deserializing on the other side — we can often reduce a lot of overhead. wasm_bindgen helps us define and work with opaque handles to JavaScript Objects or boxed Rust structures.
+    
+    **As a general rule of thumb**:
+      a good JavaScript↔WebAssembly interface design is often one where large, long-lived data structures are implemented as Rust types that live in the WebAssembly linear memory, and are exposed to JavaScript as opaque handles. 
+      
+      JavaScript calls exported WebAssembly functions that take these opaque handles, transform their data, perform heavy computations, query the data, and ultimately return a small, copy-able result. 
+      
+      By only returning the small result of the computation, we avoid copying and/or serializing everything back and forth between the JavaScript garbage-collected heap and the WebAssembly linear memory.
 
-  <h3>
-    <a href="https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html">Tutorial</a>
-    <span> | </span>
-    <a href="https://discordapp.com/channels/442252698964721669/443151097398296587">Chat</a>
-  </h3>
 
-  <sub>Built with 🦀🕸 by <a href="https://rustwasm.github.io/">The Rust and WebAssembly Working Group</a></sub>
-</div>
-
-## About
-
-[**📚 Read this template tutorial! 📚**][template-docs]
-
-This template is designed for compiling Rust libraries into WebAssembly and
-publishing the resulting package to NPM.
-
-Be sure to check out [other `wasm-pack` tutorials online][tutorials] for other
-templates and usages of `wasm-pack`.
-
-[tutorials]: https://rustwasm.github.io/docs/wasm-pack/tutorials/index.html
-[template-docs]: https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html
-
-## 🚴 Usage
-
-### 🐑 Use `cargo generate` to Clone this Template
-
-[Learn more about `cargo generate` here.](https://github.com/ashleygwilliams/cargo-generate)
-
-```
-cargo generate --git https://github.com/rustwasm/wasm-pack-template.git --name my-project
-cd my-project
-```
-
-### 🛠️ Build with `wasm-pack build`
-
-```
-wasm-pack build
-```
-
-### 🔬 Test in Headless Browsers with `wasm-pack test`
-
-```
-wasm-pack test --headless --firefox
-```
-
-### 🎁 Publish to NPM with `wasm-pack publish`
-
-```
-wasm-pack publish
-```
+## Credits
+The project is generated using the following templates:
+- [wasm-pack-template](https://github.com/rustwasm/wasm-pack-template)
+- [create-wasm-app](https://github.com/rustwasm/create-wasm-app)
 
 ## 🔋 Batteries Included
 
