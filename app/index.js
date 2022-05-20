@@ -1,5 +1,5 @@
 import { Universe, Cell } from "wasm-game-of-life";
-import { memory } from "wasm-game-of-life/wasm_game_of_life_bg"; // Import the WebAssembly memory at the top of the file.
+import { memory } from "wasm-game-of-life/wasm_game_of_life_bg.wasm"; // Import the WebAssembly memory at the top of the file.
 
 import { fps } from './fps';
 

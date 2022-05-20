@@ -7,8 +7,13 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "bootstrap.js",
   },
+  experiments: {
+    syncWebAssembly: true,
+  },
   mode: "development",
   plugins: [
-    new CopyWebpackPlugin(['index.html'])
+    new CopyWebpackPlugin({
+      patterns: ['index.html'],
+    }),
   ],
 };
